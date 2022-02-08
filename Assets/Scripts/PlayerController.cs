@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
 
     private Animator _animator;
+
+    private Vector2 _moveDirection;
     
     private static readonly int MoveX = Animator.StringToHash("moveX");
     private static readonly int MoveY = Animator.StringToHash("moveY");
@@ -17,13 +20,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        var moveDirection = new Vector2(
-            Input.GetAxisRaw("Horizontal"), 
-            Input.GetAxisRaw("Vertical"));
-
-        if (moveDirection != Vector2.zero)
+        if (_moveDirection != Vector2.zero)
         {
-            Move(moveDirection);
+            Move(_moveDirection);
         }
         else
         {
@@ -43,5 +42,10 @@ public class PlayerController : MonoBehaviour
     private void Idle()
     {
         _animator.SetBool(IsWalking, false);
+    }
+    
+    private void OnMove(InputValue value)
+    {
+        _moveDirection = value.Get<Vector2>();
     }
 }
